@@ -31,6 +31,7 @@ for i in "${!PACKAGES[@]}"; do
     set +x
 
     # Refs: https://scoop-docs.vercel.app/docs/concepts/App-Manifests.html
+    # suggest:vcredist is not needed because their windows binaries are static executables.
     cat >./bucket/"${package}".json <<EOF
 {
   "version": "${tag#v}",
