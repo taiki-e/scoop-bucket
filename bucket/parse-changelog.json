@@ -1,0 +1,13 @@
+{
+  "version": "0.4.8",
+  "description": "Simple changelog parser, written in Rust",
+  "homepage": "https://github.com/taiki-e/parse-changelog",
+  "license": "Apache-2.0|MIT",
+  "architecture": {
+    "64bit": {
+      "url": "https://github.com/taiki-e/parse-changelog/releases/download/v0.4.8/parse-changelog-x86_64-pc-windows-msvc.zip",
+      "hash": "1ae6b5dabbeb27e7327af27b879a58662b7e9daf5cc63165cdd4969c96ffdc89"
+    }
+  },
+  "bin": "parse-changelog.exe"
+}
