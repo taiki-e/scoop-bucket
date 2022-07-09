@@ -10,7 +10,7 @@ for bucket in bucket/*.json; do
     git add -N "${bucket}"
     if ! git diff --exit-code -- "${bucket}"; then
         name="$(basename "${bucket%.*}")"
-        version="$(grep -E '^\s+version "' "${bucket}" | sed -E 's/^\s+version "//' | sed 's/"$//')"
+        version="$(jq <"${bucket}" -r '.version')"
         git add "${bucket}"
         git commit -m "Update ${name} to ${version}"
         has_update=1
