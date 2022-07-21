@@ -1,12 +1,12 @@
 {
-  "version": "0.4.10",
+  "version": "0.4.11",
   "description": "Cargo subcommand for LLVM source-based code coverage (-C instrument-coverage)",
   "homepage": "https://github.com/taiki-e/cargo-llvm-cov",
   "license": "Apache-2.0|MIT",
   "architecture": {
     "64bit": {
-      "url": "https://github.com/taiki-e/cargo-llvm-cov/releases/download/v0.4.10/cargo-llvm-cov-x86_64-pc-windows-msvc.zip",
-      "hash": "32fcf651ac9de173a47cb9713d377a3cf3caaed0aa0bc95c3ba2777a2e69774d"
+      "url": "https://github.com/taiki-e/cargo-llvm-cov/releases/download/v0.4.11/cargo-llvm-cov-x86_64-pc-windows-msvc.zip",
+      "hash": "c1f4695bd4fa2fc7248a7f4eca1794087e17c78e31e46c5776658ffbc59176bc"
     }
   },
   "bin": "cargo-llvm-cov.exe"
