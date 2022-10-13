@@ -29,6 +29,21 @@ for i in "${!PACKAGES[@]}"; do
     x86_64_url="https://github.com/${OWNER}/${package}/releases/download/${tag}/${package}-x86_64-pc-windows-msvc.zip"
     x86_64_sha="$(curl --proto '=https' --tlsv1.2 -fsSL --retry 10 --retry-connrefused "${x86_64_url}" | sha256sum)"
     set +x
+    aarch64=''
+    case "${package}" in
+        cargo-llvm-cov | cargo-minimal-versions | parse-changelog) ;;
+        *)
+            set -x
+            aarch64_url="https://github.com/${OWNER}/${package}/releases/download/${tag}/${package}-aarch64-pc-windows-msvc.zip"
+            aarch64_sha="$(curl --proto '=https' --tlsv1.2 -fsSL --retry 10 --retry-connrefused "${aarch64_url}" | sha256sum)"
+            set +x
+            aarch64=",
+    \"arm64\": {
+      \"url\": \"${aarch64_url}\",
+      \"hash\": \"${aarch64_sha%  *}\"
+    }"
+            ;;
+    esac
 
     # Refs: https://scoop-docs.vercel.app/docs/concepts/App-Manifests.html
     # suggest:vcredist is not needed because their windows binaries are static executables.
@@ -42,7 +57,7 @@ for i in "${!PACKAGES[@]}"; do
     "64bit": {
       "url": "${x86_64_url}",
       "hash": "${x86_64_sha%  *}"
-    }
+    }${aarch64}
   },
   "bin": "${package}.exe"
 }

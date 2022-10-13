@@ -7,6 +7,10 @@
     "64bit": {
       "url": "https://github.com/taiki-e/cargo-hack/releases/download/v0.5.21/cargo-hack-x86_64-pc-windows-msvc.zip",
       "hash": "73bda86e9d6bd46bcb32f3162e9b4007c22ce04ac20a73c95eeb56f1f908a1c9"
+    },
+    "arm64": {
+      "url": "https://github.com/taiki-e/cargo-hack/releases/download/v0.5.21/cargo-hack-aarch64-pc-windows-msvc.zip",
+      "hash": "6c1c7c23b4c00d5c64d66a67c3df0455b59aa9af1271cf1df507866a577b1387"
     }
   },
   "bin": "cargo-hack.exe"
