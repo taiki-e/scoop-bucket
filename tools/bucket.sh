@@ -31,7 +31,7 @@ for i in "${!PACKAGES[@]}"; do
     set +x
     aarch64=''
     case "${package}" in
-        cargo-llvm-cov | cargo-minimal-versions | parse-changelog) ;;
+        cargo-llvm-cov | parse-changelog) ;; # TODO
         *)
             set -x
             aarch64_url="https://github.com/${OWNER}/${package}/releases/download/${tag}/${package}-aarch64-pc-windows-msvc.zip"
