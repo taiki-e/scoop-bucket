@@ -1,16 +1,16 @@
 {
-  "version": "0.5.23",
+  "version": "0.5.24",
   "description": "Cargo subcommand for testing and continuous integration",
   "homepage": "https://github.com/taiki-e/cargo-hack",
   "license": "Apache-2.0|MIT",
   "architecture": {
     "64bit": {
-      "url": "https://github.com/taiki-e/cargo-hack/releases/download/v0.5.23/cargo-hack-x86_64-pc-windows-msvc.zip",
-      "hash": "6c6ffef449a11b8563851714eaf5725e64d4e79ac348ab80a625166e602b8741"
+      "url": "https://github.com/taiki-e/cargo-hack/releases/download/v0.5.24/cargo-hack-x86_64-pc-windows-msvc.zip",
+      "hash": "b7ed532bf21baa58bf833628283652eba192b176bba6be5017723375abe95b66"
     },
     "arm64": {
-      "url": "https://github.com/taiki-e/cargo-hack/releases/download/v0.5.23/cargo-hack-aarch64-pc-windows-msvc.zip",
-      "hash": "7bc93ceced8fccfc55b775e5f7470f04c7803ec82cddae52a1af857b0d846a9c"
+      "url": "https://github.com/taiki-e/cargo-hack/releases/download/v0.5.24/cargo-hack-aarch64-pc-windows-msvc.zip",
+      "hash": "c6fbeccb49148d98c5f28ba995f8f12c2bf7ceecf613f8cb00a656a81aee646f"
     }
   },
   "bin": "cargo-hack.exe"
