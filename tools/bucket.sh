@@ -27,21 +27,44 @@ descriptions=(
     "Simple changelog parser, written in Rust"
 )
 
+retry() {
+    for i in {1..10}; do
+        if "$@"; then
+            return 0
+        else
+            sleep "${i}"
+        fi
+    done
+    "$@"
+}
+info() {
+    echo "info: $*"
+}
+run_curl() {
+    if [[ -n "${GITHUB_TOKEN:-}" ]]; then
+        retry curl --proto '=https' --tlsv1.2 -fsSL --retry 10 --retry-connrefused \
+            -H "Authorization: token ${GITHUB_TOKEN}" \
+            "$@"
+    else
+        retry curl --proto '=https' --tlsv1.2 -fsSL --retry 10 --retry-connrefused \
+            "$@"
+    fi
+}
+
 for i in "${!packages[@]}"; do
     package="${packages[${i}]}"
-    set -x
-    tag=$(curl --proto '=https' --tlsv1.2 -fsSL --retry 10 --retry-connrefused "https://api.github.com/repos/${owner}/${package}/releases/latest" | jq -r '.tag_name')
+    info "fetching latest version of ${package}"
+    tag=$(run_curl "https://api.github.com/repos/${owner}/${package}/releases/latest" | jq -r '.tag_name')
     x86_64_url="https://github.com/${owner}/${package}/releases/download/${tag}/${package}-x86_64-pc-windows-msvc.zip"
-    x86_64_sha="$(curl --proto '=https' --tlsv1.2 -fsSL --retry 10 --retry-connrefused "${x86_64_url}" | sha256sum)"
-    set +x
+    info "downloading ${x86_64_url} for checksum"
+    x86_64_sha="$(run_curl "${x86_64_url}" | sha256sum)"
     aarch64=''
     case "${package}" in
         cargo-llvm-cov) ;; # TODO
         *)
-            set -x
             aarch64_url="https://github.com/${owner}/${package}/releases/download/${tag}/${package}-aarch64-pc-windows-msvc.zip"
-            aarch64_sha="$(curl --proto '=https' --tlsv1.2 -fsSL --retry 10 --retry-connrefused "${aarch64_url}" | sha256sum)"
-            set +x
+            info "downloading ${aarch64_url} for checksum"
+            aarch64_sha="$(run_curl "${aarch64_url}" | sha256sum)"
             aarch64=",
     \"arm64\": {
       \"url\": \"${aarch64_url}\",
