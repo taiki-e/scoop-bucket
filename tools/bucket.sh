@@ -68,7 +68,7 @@ for i in "${!packages[@]}"; do
             aarch64=",
     \"arm64\": {
       \"url\": \"${aarch64_url}\",
-      \"hash\": \"${aarch64_sha%  *}\"
+      \"hash\": \"${aarch64_sha%% *}\"
     }"
             ;;
     esac
@@ -84,7 +84,7 @@ for i in "${!packages[@]}"; do
   "architecture": {
     "64bit": {
       "url": "${x86_64_url}",
-      "hash": "${x86_64_sha%  *}"
+      "hash": "${x86_64_sha%% *}"
     }${aarch64}
   },
   "bin": "${package}.exe"
