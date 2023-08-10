@@ -24,8 +24,8 @@ git config user.email "te316e89@gmail.com"
 for bucket in bucket/*.json; do
     git add -N "${bucket}"
     if ! git diff --exit-code -- "${bucket}"; then
-        name="$(basename "${bucket%.*}")"
-        version="$(jq -r '.version' "${bucket}")"
+        name=$(basename "${bucket%.*}")
+        version=$(jq -r '.version' "${bucket}")
         git add "${bucket}"
         git commit -m "Update ${name} to ${version}"
         has_update=1

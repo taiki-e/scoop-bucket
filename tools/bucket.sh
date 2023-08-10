@@ -58,14 +58,14 @@ for i in "${!packages[@]}"; do
     tag=$(run_curl "https://api.github.com/repos/${owner}/${package}/releases/latest" | jq -r '.tag_name')
     x86_64_url="https://github.com/${owner}/${package}/releases/download/${tag}/${package}-x86_64-pc-windows-msvc.zip"
     info "downloading ${x86_64_url} for checksum"
-    x86_64_sha="$(run_curl "${x86_64_url}" | sha256sum)"
+    x86_64_sha=$(run_curl "${x86_64_url}" | sha256sum)
     aarch64=''
     case "${package}" in
         cargo-llvm-cov) ;; # TODO
         *)
             aarch64_url="https://github.com/${owner}/${package}/releases/download/${tag}/${package}-aarch64-pc-windows-msvc.zip"
             info "downloading ${aarch64_url} for checksum"
-            aarch64_sha="$(run_curl "${aarch64_url}" | sha256sum)"
+            aarch64_sha=$(run_curl "${aarch64_url}" | sha256sum)
             aarch64=",
     \"arm64\": {
       \"url\": \"${aarch64_url}\",
