@@ -34,7 +34,7 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-      - uses: taiki-e/github-actions/checkout@main
+      - uses: taiki-e/checkout-action@v1
       - run: tools/bucket.sh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
