@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 # SPDX-License-Identifier: Apache-2.0 OR MIT
-set -eEuo pipefail
+set -CeEuo pipefail
 IFS=$'\n\t'
-cd "$(dirname "$0")"/..
-
-# shellcheck disable=SC2154
-trap 's=$?; echo >&2 "$0: error on line "${LINENO}": ${BASH_COMMAND}"; exit ${s}' ERR
+trap -- 's=$?; printf >&2 "%s\n" "${0##*/}:${LINENO}: \`${BASH_COMMAND}\` exit with ${s}"; exit ${s}' ERR
+cd -- "$(dirname -- "$0")"/..
 
 # Update buckets.
 #
@@ -39,7 +37,7 @@ retry() {
     "$@"
 }
 info() {
-    echo "info: $*"
+    printf >&2 'info: %s\n' "$*"
 }
 run_curl() {
     if [[ -n "${GITHUB_TOKEN:-}" ]]; then
@@ -76,7 +74,7 @@ for i in "${!packages[@]}"; do
 
     # Refs: https://scoop-docs.vercel.app/docs/concepts/App-Manifests.html
     # suggest:vcredist is not needed because their windows binaries are static executables.
-    cat >./bucket/"${package}".json <<EOF
+    cat >|./bucket/"${package}".json <<EOF
 {
   "version": "${tag#v}",
   "description": "${descriptions[${i}]}",
