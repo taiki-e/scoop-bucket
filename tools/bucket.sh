@@ -17,6 +17,7 @@ packages=(
   "cargo-minimal-versions" # https://github.com/taiki-e/cargo-minimal-versions
   "cargo-no-dev-deps"      # https://github.com/taiki-e/cargo-no-dev-deps
   "parse-changelog"        # https://github.com/taiki-e/parse-changelog
+  "parse-dockerfile"       # https://github.com/taiki-e/parse-dockerfile
 )
 descriptions=(
   "Cargo subcommand for testing and continuous integration"
@@ -24,6 +25,7 @@ descriptions=(
   "Cargo subcommand for proper use of -Z minimal-versions"
   "Cargo subcommand for running cargo without dev-dependencies"
   "Simple changelog parser, written in Rust"
+  "Dockerfile parser, written in Rust"
 )
 
 retry() {
