@@ -22,7 +22,7 @@ set -x
 has_update=''
 for bucket in bucket/*.json; do
   git add -N "${bucket}"
-  if ! git diff --exit-code -- "${bucket}"; then
+  if ! git diff --exit-code -- "${bucket}" &>/dev/null; then
     name="${bucket##*/}"
     name="${name%.*}"
     version=$(jq -r '.version' "${bucket}")
