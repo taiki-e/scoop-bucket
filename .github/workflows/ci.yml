@@ -30,4 +30,32 @@ jobs:
       repository-projects: read # for gh pr edit --add-assignee
     secrets: inherit
 
-  # TODO: test on CI
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - windows-2022
+          - windows-2025
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    steps:
+      - uses: taiki-e/checkout-action@v1
+      - id: list
+        run: |
+          buckets=()
+          for bucket in bucket/*.json; do
+            name="${bucket##*/}"
+            buckets+=("${name%.*}")
+          done
+          IFS=' '
+          printf '%s\n' "buckets=${buckets[*]}" >>"${GITHUB_OUTPUT}"
+      - run: |
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+          Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+          scoop --version
+          # TODO: test the current branch instead of main
+          scoop bucket add taiki-e https://github.com/taiki-e/scoop-bucket
+          scoop install ${{ steps.list.outputs.buckets }}
+          scoop uninstall ${{ steps.list.outputs.buckets }}
+        shell: powershell
