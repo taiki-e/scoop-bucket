@@ -37,12 +37,22 @@ jobs:
         os:
           - windows-2022
           - windows-2025
+          - windows-11-arm
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
     steps:
       - uses: taiki-e/checkout-action@v1
-      - id: list
+      - run: |
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+          Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+          Join-Path (Resolve-Path ~).Path "scoop\shims" >> $env:GITHUB_PATH
+          scoop --version
+          scoop bucket add taiki-e https://github.com/taiki-e/scoop-bucket
+        shell: powershell
+      - id: prepare
         run: |
+          rm -- ~/scoop/buckets/taiki-e/bucket/*.json
+          cp -- bucket/*.json ~/scoop/buckets/taiki-e/bucket
           buckets=()
           for bucket in bucket/*.json; do
             name="${bucket##*/}"
@@ -51,11 +61,17 @@ jobs:
           IFS=' '
           printf '%s\n' "buckets=${buckets[*]}" >>"${GITHUB_OUTPUT}"
       - run: |
-          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-          Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
-          scoop --version
-          # TODO: test the current branch instead of main
-          scoop bucket add taiki-e https://github.com/taiki-e/scoop-bucket
-          scoop install ${{ steps.list.outputs.buckets }}
-          scoop uninstall ${{ steps.list.outputs.buckets }}
+          $buckets = "${{ steps.prepare.outputs.buckets }}" -split " "
+          foreach ($bucket in $buckets) {
+            scoop install $bucket
+            if ($bucket -like "cargo-*") {
+              $subcmd = $bucket -replace "cargo-",""
+              cargo $subcmd --version
+            } else {
+              & $bucket --version
+            }
+          }
+          foreach ($bucket in $buckets) {
+            scoop uninstall $bucket
+          }
         shell: powershell
