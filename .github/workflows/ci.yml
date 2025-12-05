@@ -61,7 +61,7 @@ jobs:
           IFS=' '
           printf '%s\n' "buckets=${buckets[*]}" >>"${GITHUB_OUTPUT}"
       - run: |
-          $buckets = "${{ steps.prepare.outputs.buckets }}" -split " "
+          $buckets = $env:OUTPUT_BUCKETS -split " "
           foreach ($bucket in $buckets) {
             scoop install $bucket
             if ($bucket -like "cargo-*") {
@@ -75,3 +75,5 @@ jobs:
             scoop uninstall $bucket
           }
         shell: powershell
+        env:
+          OUTPUT_BUCKETS: ${{ steps.prepare.outputs.buckets }}
