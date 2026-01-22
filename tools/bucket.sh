@@ -85,19 +85,8 @@ for i in "${!packages[@]}"; do
   tag=$(jq -r '.tag_name' <<<"${api}")
   x86_64_url="https://github.com/${owner}/${package}/releases/download/${tag}/${package}-x86_64-pc-windows-msvc.zip"
   x86_64_sha=$(download_and_verify "${x86_64_url}")
-  aarch64=''
-  case "${package}" in
-    cargo-llvm-cov) ;; # TODO
-    *)
-      aarch64_url="https://github.com/${owner}/${package}/releases/download/${tag}/${package}-aarch64-pc-windows-msvc.zip"
-      aarch64_sha=$(download_and_verify "${aarch64_url}")
-      aarch64=",
-    \"arm64\": {
-      \"url\": \"${aarch64_url}\",
-      \"hash\": \"${aarch64_sha}\"
-    }"
-      ;;
-  esac
+  aarch64_url="https://github.com/${owner}/${package}/releases/download/${tag}/${package}-aarch64-pc-windows-msvc.zip"
+  aarch64_sha=$(download_and_verify "${aarch64_url}")
 
   # Refs: https://scoop-docs.vercel.app/docs/concepts/App-Manifests.html
   # suggest:vcredist is not needed because their windows binaries are static executables.
@@ -111,7 +100,11 @@ for i in "${!packages[@]}"; do
     "64bit": {
       "url": "${x86_64_url}",
       "hash": "${x86_64_sha}"
-    }${aarch64}
+    },
+    "arm64": {
+      "url": "${aarch64_url}",
+      "hash": "${aarch64_sha}"
+    }
   },
   "bin": "${package}.exe"
 }
