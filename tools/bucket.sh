@@ -69,7 +69,7 @@ download_and_verify() {
   local sha expected_sha
   sha=$(sha256sum "${out}")
   sha="${sha%% *}"
-  expected_sha=$(jq -r '.assets[] | select(.browser_download_url == "'"${url}"'") | .digest' <<<"${api}")
+  expected_sha=$(jq -r --arg url "${url}" '.assets[] | select(.browser_download_url == $url) | .digest' <<<"${api}")
   if [[ "sha256:${sha}" != "${expected_sha}" ]]; then
     bail "digest mismatch for ${url}; expected '${expected_sha}', actual 'sha256:${sha}'"
   fi
@@ -94,23 +94,30 @@ for i in "${!packages[@]}"; do
 
   # Refs: https://scoop-docs.vercel.app/docs/concepts/App-Manifests.html
   # suggest:vcredist is not needed because their windows binaries are static executables.
-  cat >|./bucket/"${package}".json <<EOF
-{
-  "version": "${tag#v}",
-  "description": "${descriptions[${i}]}",
-  "homepage": "https://github.com/${owner}/${package}",
+  jq -n \
+    --arg version "${tag#v}" \
+    --arg description "${descriptions[${i}]}" \
+    --arg homepage "https://github.com/${owner}/${package}" \
+    --arg x86_64_url "${x86_64_url}" \
+    --arg x86_64_sha "${x86_64_sha}" \
+    --arg aarch64_url "${aarch64_url}" \
+    --arg aarch64_sha "${aarch64_sha}" \
+    --arg bin "${package}.exe" \
+    '{
+  "version": $version,
+  "description": $description,
+  "homepage": $homepage,
   "license": "Apache-2.0|MIT",
   "architecture": {
     "64bit": {
-      "url": "${x86_64_url}",
-      "hash": "${x86_64_sha}"
+      "url": $x86_64_url,
+      "hash": $x86_64_sha
     },
     "arm64": {
-      "url": "${aarch64_url}",
-      "hash": "${aarch64_sha}"
+      "url": $aarch64_url,
+      "hash": $aarch64_sha
     }
   },
-  "bin": "${package}.exe"
-}
-EOF
+  "bin": $bin
+}' >|./bucket/"${package}".json
 done
